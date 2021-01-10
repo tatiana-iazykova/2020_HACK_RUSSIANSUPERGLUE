@@ -78,7 +78,8 @@ class BaseSolver:
         return: List of predictions
         """
         options = sorted(self.train.label.unique())
-        np.random.seed(self.seed)
+        if test_size != 1:
+            np.random.seed(self.seed)
         y_pred = np.random.choice(options, size=test_size)
         return y_pred
 
@@ -97,6 +98,7 @@ class BaseSolver:
         for key, value in frequences.items():
             labels.append(key)
             probs.append(value)
-        np.random.seed(self.seed)
+        if test_size != 1:
+            np.random.seed(self.seed)
         y_pred = np.random.choice(labels, size=test_size, p=probs)
         return y_pred
