@@ -29,7 +29,6 @@ class LiDiRusSolver(BaseSolver):
         heuristics = {
             "not_entailment": {
                 "little overlap": len(non_intersect) > 10,
-                "some overlap": len(intersect) < 6,
 
                 # catches if there is an extra clause inside
                 "extra clause": len(re.findall(r",", " ".join(non_intersect))) > 1,
