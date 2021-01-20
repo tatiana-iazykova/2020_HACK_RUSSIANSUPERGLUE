@@ -37,7 +37,7 @@ class LiDiRusSolver(BaseSolver):
                 "keyword": len(non_intersect) == 2,
 
                 # negated word, e.g: необычный, незапланированно
-                "negated words": re.match(r"не\w+", " ".join(non_intersect)) != None ,
+                "negated words": re.search(r'(?<=\s)не\w+', " ".join(non_intersect)) != None ,
 
                 # has one of the words from the list
                 "wordlist": len(self.ne_words.intersection(non_intersect)) > 0},
