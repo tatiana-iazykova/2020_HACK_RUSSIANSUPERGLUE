@@ -30,7 +30,9 @@ https://github.com/tatiana-iazykova/2020_HACK_RUSSIANSUPERGLUE
 
 **BEWARE: next step may not work**
 
-7.	When you are finished, click **File** at the Colab menu panel at the upper end of the workspace.  And try to choose **Save a copy in Github** with selecting the repository https://github.com/tatiana-iazykova/2020_HACK_RUSSIANSUPERGLUE
+7.	When you are finished, click **File** at the Colab menu panel at the upper end of the workspace.  And try to choose **Save a copy in Github** with selecting the repository
+
+https://github.com/tatiana-iazykova/2020_HACK_RUSSIANSUPERGLUE
   
 8.	If step 7 doesn’t work, **download** the notebook and send it to one of the emails: 
       * tvyazykova@edu.hse.ru
