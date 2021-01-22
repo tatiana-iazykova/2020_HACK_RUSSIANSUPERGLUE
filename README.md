@@ -20,7 +20,9 @@ To make your stay here a little bit easier here are a few tips on what you can a
 #### In order to gain access to our findings (and maybe contribute to our study by finding some new info) we recommend following this algorithm: ####
 1.	In the new tab open GoogleColab and click on to **GitHub** in the appeared window.
 2.	Copy the address below to the field after *Enter a GitHub URL or search by organisation or user*
+
 https://github.com/tatiana-iazykova/2020_HACK_RUSSIANSUPERGLUE
+
 3.	In the field below you should be able to see all the notebooks in the repository. 
 4.	Choose whichever you liked and double-click it. 
 5.	Explore away
