@@ -4,7 +4,7 @@
 
 To make your stay here a little bit easier here are a few tips on what you can and cannot expect to find here and what to do with all of these.
 
-### You can expect to find here: ###
+### What you can find in this repository: ###
   *	Detailed descriptions of each and every dataset that is on RussianSuperGlue with various graphics and schemes
   *	Baseline for how to solve each dataset if we:
     * Just picked a majority class
