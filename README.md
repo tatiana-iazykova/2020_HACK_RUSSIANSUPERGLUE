@@ -1,4 +1,4 @@
-# HACK RUSSIANSUPERGLUE
+# Hack RussianSuperGlue
 
 ## Welcome to this repository! ##
 
