@@ -1,4 +1,4 @@
-# 2020_HACK_RUSSIANSUPERGLUE
+# HACK RUSSIANSUPERGLUE
 
 ## Welcome to this repository! ##
 
