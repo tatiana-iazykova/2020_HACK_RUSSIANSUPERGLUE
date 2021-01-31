@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from base import BaseSolver
 from utils import RSG_MorphAnalyzer
-from MuSeRC import MuSeRC_metrics
+
 
 class MuSeRCSolver(BaseSolver):
 
@@ -14,10 +14,13 @@ class MuSeRCSolver(BaseSolver):
         self.morph = RSG_MorphAnalyzer() # PyMorphy + cashing
         self.c = 0
         self.c_true = 0
+        self.MAJOR_LABEL = True
+        self.OPTIONS = []
+        self.PROBS = []
         super(MuSeRCSolver, self).__init__(path, path_valid)
 
 
-    def preprocess(self, path):
+    def preprocess_valid(self, path):
         """ preprocess sentences to apply heuristics"""
         self.reshape_dataset(path)
         self.passages = pd.DataFrame(self.passages, columns=['passage'])
@@ -56,31 +59,28 @@ class MuSeRCSolver(BaseSolver):
         return heuristics
 
 
-    def heuristics(self, heuristic = None):
+    def heuristics(self, MODE = "MAJOR", heuristic = None):
         """
             apply heuristics to a dataset
             To check on a single heursitic, pass
                         heuristic = {"label": "heuristic name"}
             to this function
-        """
-        # generate a 2D array of random labels:
-        # total number of questions x maximum number of answers per question
-        random_labels = self.generate_matrix(len(self.y_true))
 
+            NB: update stats first
+        """
         y_pred = []
 
         for question_id, batch in enumerate(self.qa):
             # a batch consists of rows with the same question but differen asnwer
             batch = self.preprocess_batch(batch)
 
-            y_pred.append(self.iterate_over_batch(batch, random_labels,
-                                                  question_id, heuristic))
+            y_pred.append(self.iterate_over_batch(batch, question_id,
+                                                  MODE, heuristic))
 
         print(f'Heuristics appears for {self.c} samples, {self.c_true} of them correct')
-        print(MuSeRC_metrics(y_pred, self.y_true))
-
         self.reset_counters()
-        return
+
+        return self.y_true, y_pred
 
 
     def reshape_dataset(self, path):
@@ -132,14 +132,6 @@ class MuSeRCSolver(BaseSolver):
         return int(re.sub('?', '', passage_id))
 
 
-    def generate_matrix(self, size):
-        # 7 is a maximum number of answer per question in Validate dataset.
-        np.random.seed(self.seed)
-        random_labels=np.random.choice([0,1], size=size * 7)
-
-        return random_labels.reshape((-1,7))
-
-
     def preprocess_batch(self, batch):
         """ prepare a batch of QandA to be interated over """
         batch = pd.DataFrame(batch, columns=['passage_id', 'QA'])
@@ -148,6 +140,7 @@ class MuSeRCSolver(BaseSolver):
                 ]] =  batch[ # splits questions and answer
                             'QA'
                             ].str.split(r"(?<=\?)\s",
+                                        n=1,
                                         expand=True)
 
 
@@ -159,7 +152,7 @@ class MuSeRCSolver(BaseSolver):
         return batch
 
 
-    def iterate_over_batch(self, batch, random_labels, question_id, heuristic) -> list:
+    def iterate_over_batch(self, batch, question_id, MODE, heuristic) -> list:
         line_pred = [] # prediction for all the answers in a batch
 
         for answer_id, row in batch.iterrows():
@@ -192,12 +185,49 @@ class MuSeRCSolver(BaseSolver):
                 if self.y_true[question_id][answer_id] == 0:
                     self.c_true += 1
             else:
-                # insert random value from a pre-generated set
-                line_pred.append(random_labels[question_id][answer_id])
-
+                # insert random value if not triggered
+                if MODE == 'MAJOR':
+                    line_pred.append(self.MAJOR_LABEL)
+                elif MODE == 'RANDOM':
+                    line_pred.extend(
+                        np.random.choice(self.OPTIONS, size=1))
+                elif MODE == "RB":
+                    line_pred.extend(
+                        np.random.choice(self.OPTIONS,
+                                         size=1, p=self.PROBS))
+                    
         return line_pred
 
 
     def reset_counters(self):
         self.c = 0
         self.c_true = 0
+
+
+    def get_stats_MuSeRC(self):
+        with jsonlines.open(self.path) as reader:
+            lines = list(reader)
+        labels = []
+        for row in lines:
+            _labels = self.get_row_pred_MuSeRC(row)
+            labels.extend(_labels)
+        labels = [item for sublist in labels for item in sublist]
+        self.MAJOR_LABEL = max(labels, key=labels.count)
+        labels = pd.Series(labels)
+        frequences = dict(labels.value_counts(normalize=True))
+        self.OPTIONS = []
+        self.PROBS = []
+        for key, value in frequences.items():
+            self.OPTIONS.append(key)
+            self.PROBS.append(value)
+
+    def get_row_pred_MuSeRC(self, row):
+        labels = []
+        for line in row["passage"]["questions"]:
+            line_labels = []
+            for answ in line["answers"]:
+                line_labels.append(answ.get("label", 0))
+
+            labels.append(line_labels)
+            
+        return labels
