@@ -1,10 +1,10 @@
 # Hack RussianSuperGlue
 
 ## Welcome to this repository! ##
-Here you can find the results of our study where we tried to solve natural language understanding tasks with the help of rule-base heuristics.
+Here you can find the results of our study where we attempt to solve natural language understanding tasks with the help of rule-base heuristics.
 
 ### What you can find in this repository: ###
-  *	Python notebooks with detailed descriptions of each and every [RussianSuperGlue](https://russiansuperglue.com/) dataset with various graphics and schemes
+  *	Python notebooks with detailed descriptions of each [RussianSuperGlue](https://russiansuperglue.com/) dataset with various graphics and schemes
   *	Baseline for how to solve each dataset if we:
     * Picked a majority class
     * Picked random option
