@@ -15,12 +15,12 @@ class LiDiRusSolver(BaseSolver):
     def preprocess(self):
         self.cashe = {} # create a dictionary for lemmas
         """ preprocess sentences to apply heuristics"""
-        self.train["sentence1_words"] = self.train['sentence1'].str.split()
-        self.train["sentence2_words"] = self.train['sentence2'].str.split()
-        self.train["sentence1_lemmas"] = self.morph.lemmantize_sentences(
-            self.train.sentence1.to_list())
-        self.train["sentence2_lemmas"] = self.morph.lemmantize_sentences(
-            self.train.sentence2.to_list())
+        self.valid["sentence1_words"] = self.valid['sentence1'].str.split()
+        self.valid["sentence2_words"] = self.valid['sentence2'].str.split()
+        self.valid["sentence1_lemmas"] = self.morph.lemmantize_sentences(
+            self.valid.sentence1.to_list())
+        self.valid["sentence2_lemmas"] = self.morph.lemmantize_sentences(
+            self.valid.sentence2.to_list())
 
 
     def get_heuristics(self, non_intersect, intersect, non_intersect_lemmas, heuristic) -> dict:
@@ -68,17 +68,13 @@ class LiDiRusSolver(BaseSolver):
                         heuristic = {"label": "heuristic name"}
             to this function
         """
-
-        test_size = len(self.train.label)
-        random_labels = final_decision(test_size=test_size)
-
-        y_true = self.train.label
+        y_true = self.valid.label
         y_pred = []
 
         c = 0 # heuristics counter
         c_true = 0 # valid heuristics counter
 
-        for i, row in self.train.iterrows():
+        for i, row in self.valid.iterrows():
 
             sentence1 = row['sentence1_words']
             sentence2 = row['sentence2_words']
@@ -108,10 +104,10 @@ class LiDiRusSolver(BaseSolver):
                 if row.label == 'not_entailment': # compares a predicted label with a correct one
                     c_true += 1
             else:
-                y_pred.append(random_labels[i]) # insert random
+                y_pred.append(final_desicion(test_size=1)[0])
 
         print(f'Heuristics appears for {c} samples, {c_true} of them correct')
-        print(self.show_mc(y_true, y_pred))
+        return y_true, y_pred
 
     def show_mc(self, y_true, y_pred):
         return matthews_corrcoef(y_true, y_pred)
