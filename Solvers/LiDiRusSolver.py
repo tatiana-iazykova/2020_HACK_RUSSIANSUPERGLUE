@@ -104,7 +104,7 @@ class LiDiRusSolver(BaseSolver):
                 if row.label == 'not_entailment': # compares a predicted label with a correct one
                     c_true += 1
             else:
-                y_pred.append(final_desicion(test_size=1)[0])
+                y_pred.append(final_decision(test_size=1)[0])
 
         print(f'Heuristics appears for {c} samples, {c_true} of them correct')
         return y_true, y_pred
