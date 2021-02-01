@@ -16,7 +16,8 @@ Here you can find the results of our study where we attempted to solve natural l
   * Data from RussianSuperGlue, since it is loaded to the workspace in the first cell of each notebook. 
   
 ### What to do with all of these: ###
-#### In order to gain access to our findings (and maybe contribute to our study) we recommend following this algorithm: ####
+#### In order to gain access to our findings (and maybe contribute to our study) we recommend following this algorithm: 
+> Below you can find links to all the notebooks in Colab
 1.	Choose the task you liked below:
     * [Linguistic Diagnostic for Russian](https://colab.research.google.com/github/tatiana-iazykova/2020_HACK_RUSSIANSUPERGLUE/blob/main/RSG_LiDiRus.ipynb)
     * [Russian Commitment Bank](https://colab.research.google.com/github/tatiana-iazykova/2020_HACK_RUSSIANSUPERGLUE/blob/main/RSG_RCB.ipynb)
