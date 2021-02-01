@@ -9,7 +9,7 @@ Here you can find the results of our study where we attempted to solve natural l
     * Picked a majority class
     * Picked random option
     * Picked random option, were classes balanced   
-  * Suspicious cases in annotation, where you either cannot possibly give an answer or the answer is wrong
+  * Suspicious cases in annotation, where you either cannot give a straight answer to or the answer is wrong
   * Heuristics specified for every dataset separately to solve it and achieve plausible or even comparable performance with models listed in the leaderboard 
 
 ### What you should not expect to find in this repository: ###
