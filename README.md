@@ -32,7 +32,7 @@ Here you can find the results of our study where we attempted to solve natural l
 
 **BEWARE: next step may not work**
 
-4.	When you are finished, click **File** in the Colab menu panel. Choose **Save a copy in Github** and select the repository to submit your updates.
+4.	When you are finished, click **File** in the Colab menu panel. Choose **Save a copy in Github**, add minor changes to the filename, so we would be able to discern your notebooks from ours and select the repository to submit your updates.
 
 https://github.com/tatiana-iazykova/2020_HACK_RUSSIANSUPERGLUE
   
