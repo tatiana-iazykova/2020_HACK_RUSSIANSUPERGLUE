@@ -102,3 +102,11 @@ class BaseSolver:
             np.random.seed(self.seed)
         y_pred = np.random.choice(labels, size=test_size, p=probs)
         return y_pred
+    
+class BaseSolverSubmit(BaseSolver):
+   
+    def __init__(self, path: str, path_test, path_valid=None):
+        super(BaseSolverSubmit, self).__init__(path, path_valid)
+        
+        self.train = pd.concat([self.train, self.valid])
+        self.valid = pd.read_json(path_or_buf=path_test, lines=True)
