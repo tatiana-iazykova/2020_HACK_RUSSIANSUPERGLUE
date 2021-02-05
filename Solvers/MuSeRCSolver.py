@@ -203,12 +203,12 @@ class MuSeRCSolver(BaseSolver):
                 if MODE == 'MAJOR':
                     line_pred.append(self.MAJOR_LABEL)
                 elif MODE == 'RANDOM':
-                    line_pred.extend(
-                        np.random.choice(self.OPTIONS, size=1))
+                    line_pred.extend(int( # json does not recognize NumPy data types
+                        np.random.choice(self.OPTIONS, size=1)))
                 elif MODE == "RB":
-                    line_pred.extend(
+                    line_pred.extend(int( # json does not recognize NumPy data types
                         np.random.choice(self.OPTIONS,
-                                         size=1, p=self.PROBS))
+                                         size=1, p=self.PROBS)))
                     
         return line_pred
 
