@@ -20,7 +20,7 @@ class MuSeRCSolver(BaseSolver):
         super(MuSeRCSolver, self).__init__(path, path_valid)
 
 
-    def preprocess_valid(self, path):
+    def preprocess_data(self, path):
         """ preprocess sentences to apply heuristics"""
         self.reshape_dataset(path)
         self.passages = pd.DataFrame(self.passages, columns=['passage'])
@@ -65,23 +65,37 @@ class MuSeRCSolver(BaseSolver):
             To check on a single heursitic, pass
                         heuristic = {"label": "heuristic name"}
             to this function
-
             NB: update stats first
         """
+        test_pred = self.prepare_output()
+
+        answer_id = 0
+
         y_pred = []
 
         for question_id, batch in enumerate(self.qa):
             # a batch consists of rows with the same question but differen asnwer
             batch = self.preprocess_batch(batch)
+            passage_id = batch.passage_id[0]
 
-            y_pred.append(self.iterate_over_batch(batch, question_id,
-                                                  MODE, heuristic))
+            line_pred = self.iterate_over_batch(batch, question_id,
+                                                MODE, heuristic)
+            
+            y_pred.append(line_pred)
+
+            answers_range = (answer_id, (answer_id+len(batch)))
+           
+            output = self.reshape_preds(question_id, answers_range, line_pred)
+            
+            test_pred[passage_id]['passage']['questions'].append(output) 
+            
+            answer_id = answers_range[1]
+            
 
         print(f'Heuristics appears for {self.c} samples, {self.c_true} of them correct')
         self.reset_counters()
 
-        return self.y_true, y_pred
-
+        return test_pred, self.y_true, y_pred
 
     def reshape_dataset(self, path):
         """ a function from MuSeRC.py modified to solve tasks with heursitics """
@@ -110,7 +124,7 @@ class MuSeRCSolver(BaseSolver):
 
             for answ in line["answers"]:
                 line_labels.append(answ.get("label", 0))
-                answ = f"{line['question']} {answ['text']}"
+                answ = f"{line['question']}<sep>{answ['text']}"
                 line_answers.append([passage_id, answ])
 
             labels.append(line_labels)
@@ -135,15 +149,15 @@ class MuSeRCSolver(BaseSolver):
     def preprocess_batch(self, batch):
         """ prepare a batch of QandA to be interated over """
         batch = pd.DataFrame(batch, columns=['passage_id', 'QA'])
+
         batch[['question',
                 'answer',
                 ]] =  batch[ # splits questions and answer
                             'QA'
-                            ].str.split(r"(?<=\?)\s",
+                            ].str.split("<sep>",
                                         n=1,
                                         expand=True)
-
-
+                            
         batch['answer_tokens'] = batch['answer'].str.split()
         batch['answer_len'] = batch['answer_tokens'].apply(len)
         batch['lemmas'] = self.morph.lemmantize_sentences(
@@ -231,3 +245,31 @@ class MuSeRCSolver(BaseSolver):
             labels.append(line_labels)
             
         return labels
+
+
+    def prepare_output(self) -> list:
+        """ forms a list of dicts with a proper form """
+        output = []
+        ids = [row[0][0] for row in self.qa]
+        
+        for id in list(set(ids)):
+            output.append(
+                {"idx": id, # passage_id
+                 "passage": {
+                     "questions": []}}
+            )
+        
+        return output
+
+    
+    def reshape_preds(self, question_id, answers_range, labels) -> list:
+        """ adds labels to test_pred in the necessary form """
+        ids = [id for id in range(answers_range[0], answers_range[1])]
+
+        answer = {
+            'answers': [
+                        {'idx': id, 'label': label} for id, label in zip(ids, labels)
+                        ],
+                  'idx': question_id}
+
+        return answer
