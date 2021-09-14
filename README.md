@@ -41,7 +41,8 @@ https://github.com/tatiana-iazykova/2020_HACK_RUSSIANSUPERGLUE
       * tvyazykova@edu.hse.ru
 
 
-```@misc{iazykova2021unreasonable,
+```bibtex
+@misc{iazykova2021unreasonable,
       title={Unreasonable Effectiveness of Rule-Based Heuristics in Solving Russian SuperGLUE Tasks}, 
       author={Tatyana Iazykova and Denis Kapelyushnik and Olga Bystrova and Andrey Kutuzov},
       year={2021},
