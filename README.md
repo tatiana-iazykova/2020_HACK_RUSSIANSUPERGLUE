@@ -40,3 +40,12 @@ https://github.com/tatiana-iazykova/2020_HACK_RUSSIANSUPERGLUE
 5.	If step 4 doesn’t work, share the link to the notebook via email: 
       * tvyazykova@edu.hse.ru
 
+
+@misc{iazykova2021unreasonable,
+      title={Unreasonable Effectiveness of Rule-Based Heuristics in Solving Russian SuperGLUE Tasks}, 
+      author={Tatyana Iazykova and Denis Kapelyushnik and Olga Bystrova and Andrey Kutuzov},
+      year={2021},
+      eprint={2105.01192},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
